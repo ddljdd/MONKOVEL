@@ -30,8 +30,10 @@ public class WelcomeActivity extends MBaseActivity {
 
     @Override
     protected void initData() {
-        welAnimator = ValueAnimator.ofFloat(1f, 0f).setDuration(800);
-        welAnimator.setStartDelay(500);
+        welAnimator = ValueAnimator.ofFloat(1f, 0f).setDuration(300);
+        welAnimator.setStartDelay(100);
+        //startActivityByAnim(new Intent(WelcomeActivity.this, MainActivity.class), android.R.anim.fade_in, android.R.anim.fade_out);
+        //finish();
     }
 
     @Override

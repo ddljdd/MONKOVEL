@@ -47,7 +47,7 @@ public class ImportBookActivity extends MBaseActivity<IImportBookPresenter> impl
     private MoProgressHUD moProgressHUD;
     @Override
     protected IImportBookPresenter initInjector() {
-        return new ImportBookPresenterImpl();
+        return new ImportBookPresenterImpl(this);
     }
 
     @Override

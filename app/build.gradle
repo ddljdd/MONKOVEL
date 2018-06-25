@@ -2,18 +2,18 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 26
+    buildToolsVersion '28.0.0'
 
     defaultConfig {
         applicationId "com.monke.monkeybook"
         minSdkVersion 17
-        targetSdkVersion 25
-        versionCode 9
-        versionName "1.2.4"
+        targetSdkVersion 26
+        versionCode 10
+        versionName "2.0.0"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
+        flavorDimensions "versionCode"
     }
-
     productFlavors{
         baidu {
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
@@ -32,13 +32,11 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                variant.outputs.all {
                         //这里修改apk文件名
-                        def fileName = APP_NAME +"_"+"${variant.productFlavors[0].name}"+ "_v" + defaultConfig.versionName + "(" + defaultConfig.versionCode + ").apk"
-                        output.outputFile = new File(outputFile.parent, fileName)
-                    }
+                        outputFileName = APP_NAME +"_"+"${variant.productFlavors[0].name}"+ "_v" + defaultConfig.versionName + "(" + defaultConfig.versionCode + ").apk"
+
+
                 }
             }
         }
@@ -62,11 +60,12 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile(name: 'autoupdatesdk-release', ext: 'aar')
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:cardview-v7:25.1.0'
-    compile 'com.android.support:support-compat:25.1.0'
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:design:26.+'
+    compile 'com.android.support:cardview-v7:26.+'
+    compile 'com.android.support:support-compat:26.+'
     compile project(':basemvplib')
+    //compile 'com.amitshekhar.android:debug-db:1.0.3'
     //GreenDao
     compile 'org.greenrobot:greendao:3.0.1'
     compile 'org.greenrobot:greendao-generator:3.0.0'

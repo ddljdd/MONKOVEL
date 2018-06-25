@@ -14,6 +14,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.widget.Toast;
+import android.util.Log;
 
 import com.hwangjr.rxbus.RxBus;
 import com.monke.basemvplib.impl.BaseActivity;
@@ -221,10 +222,14 @@ public class ReadBookPresenterImpl extends BasePresenterImpl<IBookReadView> impl
                                     loadContent(bookContentView, bookTag, chapterIndex, tempList.getPageIndex());
                                 } else {
                                     final int finalPageIndex1 = tempList.getPageIndex();
+                                    Log.i("JJ","Err0:finalPageIndex1:"+finalPageIndex1);
+                                    Log.i("JJ","Err0:tempList.getBookContentList().size():"+tempList.getBookContentList().size());
                                     WebBookModelImpl.getInstance().getBookContent(bookShelf.getBookInfoBean().getChapterlist().get(chapterIndex).getDurChapterUrl(), chapterIndex, bookShelf.getTag()).map(new Function<BookContentBean, BookContentBean>() {
                                         @Override
                                         public BookContentBean apply(BookContentBean bookContentBean) throws Exception {
-                                            if (bookContentBean.getRight()) {
+                                            if (bookContentBean.getRight() &&bookContentBean.getDurChapterUrl() != null) {
+                                                Log.i("JJ","Err1:GetTag:"+bookContentBean.getTag());
+                                                Log.i("JJ","Err1:ChapterURL:"+bookContentBean.getDurChapterUrl());
                                                 DbHelper.getInstance().getmDaoSession().getBookContentBeanDao().insertOrReplace(bookContentBean);
                                                 bookShelf.getBookInfoBean().getChapterlist().get(chapterIndex).setHasCache(true);
                                                 DbHelper.getInstance().getmDaoSession().getChapterListBeanDao().update(bookShelf.getBookInfoBean().getChapterlist().get(chapterIndex));

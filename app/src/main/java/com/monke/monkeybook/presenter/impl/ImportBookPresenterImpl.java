@@ -13,6 +13,11 @@ import com.monke.monkeybook.presenter.IImportBookPresenter;
 import com.monke.monkeybook.view.IImportBookView;
 import java.io.File;
 import java.util.List;
+import android.os.storage.StorageManager;
+import android.content.Context;
+import android.util.Log;
+import java.util.ArrayList;
+import java.lang.reflect.Method;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -23,8 +28,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ImportBookPresenterImpl extends BasePresenterImpl<IImportBookView> implements IImportBookPresenter {
 
-
-    public ImportBookPresenterImpl(){
+    private Context mcontext;
+    public ImportBookPresenterImpl(Context context){
+        mcontext = context;
 
     }
     @Override
@@ -34,7 +40,15 @@ public class ImportBookPresenterImpl extends BasePresenterImpl<IImportBookView> 
             public void subscribe(ObservableEmitter<File> e) throws Exception {
                 if (Environment.getExternalStorageState().equals(
                         Environment.MEDIA_MOUNTED)){
-                    searchBook(e,new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                    //searchBook(e,new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                    String[] paths = getStoragePath();
+                    for(int i=0; i < paths.length;i++){
+                        Log.d("info", "search path:"+paths[i]);
+                        searchBook(e,new File(paths[i]));
+                    }
+
+
+
                 }
                 e.onComplete();
             }
@@ -57,7 +71,18 @@ public class ImportBookPresenterImpl extends BasePresenterImpl<IImportBookView> 
                     }
                 });
     }
-
+    private StorageManager mStorageManager;
+    public String[] getStoragePath() {
+        try {
+            StorageManager sm = (StorageManager) mcontext.getSystemService(Context.STORAGE_SERVICE);
+            Method getVolumePathsMethod = StorageManager.class.getMethod("getVolumePaths", (Class<?>[]) null);
+            String[] paths = (String[]) getVolumePathsMethod.invoke(sm, (Object[]) null);
+            return paths;
+        } catch (Exception e) {
+            Log.e("info", "getStoragePath() failed", e);
+        }
+        return null;
+    }
     private void searchBook(ObservableEmitter<File> e, File parentFile) {
         if (null != parentFile && parentFile.listFiles().length > 0) {
             File[] childFiles = parentFile.listFiles();

@@ -100,7 +100,7 @@ public class ImportBookModelImpl extends BaseModelImpl implements IImportBookMod
     }
 
     private void saveChapter(File book, String md5) throws IOException {
-        String regex = "第.{1,7}章.{0,}";
+        String regex = "第.{1,7}[章|回].{0,}";
 
         String encoding;
 

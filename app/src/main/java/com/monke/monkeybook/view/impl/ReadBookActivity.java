@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -333,8 +334,11 @@ public class ReadBookActivity extends MBaseActivity<IBookReadPresenter> implemen
                     atvTitle.setText(mPresenter.getBookShelf().getBookInfoBean().getChapterlist().get(mPresenter.getBookShelf().getDurChapter()).getDurChapterName());
                 else
                     atvTitle.setText("无章节");
-                if (hpbReadProgress.getDurProgress() != chapterIndex + 1)
+                if (hpbReadProgress.getDurProgress() != chapterIndex + 1){
+                    Log.i("JJ/ReadBookActivity","hpbReadProgress+1");
                     hpbReadProgress.setDurProgress(chapterIndex + 1);
+                }
+
             }
 
             @Override
@@ -359,12 +363,14 @@ public class ReadBookActivity extends MBaseActivity<IBookReadPresenter> implemen
         tvPre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("JJ/ReadBookActivity","SetOnClickLister-1");
                 csvBook.setInitData(mPresenter.getBookShelf().getDurChapter() - 1, mPresenter.getBookShelf().getBookInfoBean().getChapterlist().size(), BookContentView.DURPAGEINDEXBEGIN);
             }
         });
         tvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("JJ/ReadBookActivity","SetOnClickLister+1");
                 csvBook.setInitData(mPresenter.getBookShelf().getDurChapter() + 1, mPresenter.getBookShelf().getBookInfoBean().getChapterlist().size(), BookContentView.DURPAGEINDEXBEGIN);
             }
         });

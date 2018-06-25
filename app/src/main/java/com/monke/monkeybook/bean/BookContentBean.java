@@ -3,6 +3,8 @@ package com.monke.monkeybook.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
@@ -47,12 +49,14 @@ public class BookContentBean implements Parcelable{
     }
 
     protected BookContentBean(Parcel in) {
+
         durChapterUrl = in.readString();
         durChapterIndex = in.readInt();
         durCapterContent = in.readString();
         tag = in.readString();
         lineContent = in.createStringArrayList();
         isRight = in.readByte()!=0;
+        Log.i("JJ/BookContentBean","Parcel:durChapterUrl:"+durChapterUrl);
     }
 
     @Generated(hash = 1355824386)
@@ -93,11 +97,13 @@ public class BookContentBean implements Parcelable{
     };
 
     public String getDurChapterUrl() {
+        Log.i("JJ","L97getDurChapterUrl:"+durChapterUrl);
         return durChapterUrl;
     }
 
     public void setDurChapterUrl(String durChapterUrl) {
         this.durChapterUrl = durChapterUrl;
+        Log.i("JJ","setDurChapterUrl:"+durChapterUrl);
     }
 
     public int getDurChapterIndex() {
@@ -119,13 +125,14 @@ public class BookContentBean implements Parcelable{
     }
 
     public String getTag() {
+        Log.i("JJ","getTag:"+tag);
         return tag;
     }
 
     public void setTag(String tag) {
+        Log.i("JJ","setTag:"+tag);
         this.tag = tag;
     }
-
     public List<String> getLineContent() {
         return lineContent;
     }

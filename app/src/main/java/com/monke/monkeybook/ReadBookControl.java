@@ -3,6 +3,8 @@ package com.monke.monkeybook;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.util.Log;
+
 import com.monke.monkeybook.utils.DensityUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +70,17 @@ public class ReadBookControl {
             temp5.put("textSize", 22);
             temp5.put("textExtra", DensityUtil.dp2px(MApplication.getInstance(),13));
             textKind.add(temp5);
+/*
+            Map<String,Integer> temp6 = new HashMap<>();
+            temp5.put("textSize", 24);
+            temp5.put("textExtra", DensityUtil.dp2px(MApplication.getInstance(),15));
+            textKind.add(temp6);
+
+            Map<String,Integer> temp7 = new HashMap<>();
+            temp5.put("textSize", 26);
+            temp5.put("textExtra", DensityUtil.dp2px(MApplication.getInstance(),17));
+            textKind.add(temp7);
+            */
         }
         if(null == textDrawable){
             textDrawable = new ArrayList<>();
@@ -87,20 +100,28 @@ public class ReadBookControl {
             textDrawable.add(temp3);
 
             Map<String,Integer> temp4 = new HashMap<>();
-            temp4.put("textColor",Color.parseColor("#808080"));
+            temp4.put("textColor",Color.parseColor("#6bc966"));
             temp4.put("textBackground",R.drawable.bg_readbook_black);
             textDrawable.add(temp4);
         }
         preference = MApplication.getInstance().getSharedPreferences("CONFIG", 0);
-        this.textKindIndex = preference.getInt("textKindIndex",DEFAULT_TEXT);
-        this.textSize = textKind.get(textKindIndex).get("textSize");
-        this.textExtra = textKind.get(textKindIndex).get("textExtra");
-        this.textDrawableIndex = preference.getInt("textDrawableIndex",DEFAULT_BG);
-        this.textColor = textDrawable.get(textDrawableIndex).get("textColor");
-        this.textBackground = textDrawable.get(textDrawableIndex).get("textBackground");
+        if (preference == null){
+            Log.e("JJ/ReadBookControl","preference is null");
+        }
+        try {
+            this.textKindIndex = preference.getInt("textKindIndex", DEFAULT_TEXT);
+            this.textSize = textKind.get(textKindIndex).get("textSize");
+            this.textExtra = textKind.get(textKindIndex).get("textExtra");
+            this.textDrawableIndex = preference.getInt("textDrawableIndex", DEFAULT_BG);
+            this.textColor = textDrawable.get(textDrawableIndex).get("textColor");
+            this.textBackground = textDrawable.get(textDrawableIndex).get("textBackground");
 
-        this.canClickTurn = preference.getBoolean("canClickTurn",true);
-        this.canKeyTurn = preference.getBoolean("canClickTurn",true);
+            this.canClickTurn = preference.getBoolean("canClickTurn", true);
+            this.canKeyTurn = preference.getBoolean("canClickTurn", true);
+        }
+        catch (Exception e) {
+        e.printStackTrace();
+    }
     }
 
     public int getTextSize() {

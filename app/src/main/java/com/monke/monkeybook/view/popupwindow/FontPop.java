@@ -4,6 +4,7 @@ package com.monke.monkeybook.view.popupwindow;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,6 +130,11 @@ public class FontPop extends PopupWindow{
         }else{flSmaller.setEnabled(true);
             flBigger.setEnabled(true);
 
+        }
+        if(textKindIndex > readBookControl.getTextKind().size()-1){
+            Log.e("JJ/FontPOP","font index > size");
+            textKindIndex = readBookControl.getTextKind().size()-1;
+            readBookControl.setTextKindIndex(textKindIndex);
         }
         if(textKindIndex == ReadBookControl.DEFAULT_TEXT){
             tvTextSizedDefault.setEnabled(false);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
@@ -45,9 +46,11 @@ public class RefreshScrollView extends ScrollView{
                 int action = event.getAction();
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
+                        Log.i("JJ/RefreshScrollViewBar","MoveEvent.Action_Down");
                         durTouchY = event.getY();
                         break;
                     case MotionEvent.ACTION_MOVE:
+                        Log.i("JJ/RefreshScrollViewBar","MoveEvent.Action_MOVE");
                         if (durTouchY == -1000000)
                             durTouchY = event.getY();
                         float dY = event.getY() - durTouchY;  //>0下拉
@@ -65,6 +68,7 @@ public class RefreshScrollView extends ScrollView{
                         }
                         break;
                     case MotionEvent.ACTION_UP:
+                        Log.i("JJ/RefreshScrollViewBar","MoveEvent.Action_UP");
                         if (baseRefreshListener != null && rpb.getSecondMaxProgress() > 0 && rpb.getSecondDurProgress() > 0) {
                             if (rpb.getSecondDurProgress() >= rpb.getSecondMaxProgress() && !isRefreshing) {
                                 startRefresh();

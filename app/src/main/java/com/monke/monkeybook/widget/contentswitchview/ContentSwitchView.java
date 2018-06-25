@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContentSwitchView extends FrameLayout implements BookContentView.SetDataListener {
-    private final long animDuration = 300;
+    private final long animDuration = 150;
     public final static int NONE = -1;
     public final static int PREANDNEXT = 0;
     public final static int ONLYPRE = 1;
@@ -63,7 +64,7 @@ public class ContentSwitchView extends FrameLayout implements BookContentView.Se
     private void init() {
         readBookControl = ReadBookControl.getInstance();
 
-        scrollX = DensityUtil.dp2px(getContext(), 30f);
+        scrollX = DensityUtil.dp2px(getContext(), 4f); //adjust it
         durPageView = new BookContentView(getContext());
         durPageView.setReadBookControl(readBookControl);
 
@@ -95,10 +96,33 @@ public class ContentSwitchView extends FrameLayout implements BookContentView.Se
     }
 
     private float startX = -1;
-
+    private void handleTouchEvent(MotionEvent event){
+        Log.d("JJ/ContentSwitchView","Handle touch event:"+event.toString());
+        if (readBookControl.getCanClickTurn() && event.getX() <= getWidth() / 3) {
+            //点击向前翻页
+            if (state == PREANDNEXT || state == ONLYPRE) {
+                initMoveSuccessAnim(viewContents.get(0), 0);
+            } else {
+                noPre();
+            }
+        } else if (readBookControl.getCanClickTurn() && event.getX() >= getWidth() / 3 * 2) {
+            //点击向后翻页
+            if (state == PREANDNEXT || state == ONLYNEXT) {
+                int tempIndex = (state == PREANDNEXT ? 1 : 0);
+                initMoveSuccessAnim(viewContents.get(tempIndex), -getWidth());
+            } else {
+                noNext();
+            }
+        } else {
+            //点击中间部位
+            if (loadDataListener != null)
+                loadDataListener.showMenu();
+        }
+    }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
+        Log.i("JJ/ContentSwitchView","onTouchEvent: action="+action);
         if (!isMoving) {
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
@@ -130,26 +154,33 @@ public class ContentSwitchView extends FrameLayout implements BookContentView.Se
                 case MotionEvent.ACTION_UP:
                     if(startX == -1)
                         startX = event.getX();
+                    Log.d("JJ/ContentSwitchView","ACTION_UP:start_x="+startX);
                     if (event.getX() - startX > 0) {
+                        Log.d("JJ/ContentSwitchView","eventX >startX,event.GetX="+event.getX());
                         if (state == PREANDNEXT || state == ONLYPRE) {
                             if (event.getX() - startX > scrollX) {
                                 //向前翻页成功
+                                Log.i("JJ/ContentSwitchView","event-1");
                                 initMoveSuccessAnim(viewContents.get(0), 0);
                             } else {
                                 initMoveFailAnim(viewContents.get(0), -getWidth());
+                                handleTouchEvent(event);
                             }
                         } else {
                             //没有上一页
                             noPre();
                         }
                     } else if (event.getX() - startX < 0) {
+                        Log.d("JJ/ContentSwitchView","eventX <startX,event.GetX()="+event.getX());
                         if (state == PREANDNEXT || state == ONLYNEXT) {
                             int tempIndex = (state == PREANDNEXT ? 1 : 0);
                             if (startX - event.getX() > scrollX) {
                                 //向后翻页成功
+                                Log.i("JJ/ContentSwitchView","event+1");
                                 initMoveSuccessAnim(viewContents.get(tempIndex), -getWidth());
                             } else {
                                 initMoveFailAnim(viewContents.get(tempIndex), 0);
+                                handleTouchEvent(event);
                             }
                         } else {
                             //没有下一页
@@ -157,27 +188,11 @@ public class ContentSwitchView extends FrameLayout implements BookContentView.Se
                         }
                     } else {
                         //点击事件
-                        if (readBookControl.getCanClickTurn() && event.getX() <= getWidth() / 3) {
-                            //点击向前翻页
-                            if (state == PREANDNEXT || state == ONLYPRE) {
-                                initMoveSuccessAnim(viewContents.get(0), 0);
-                            } else {
-                                noPre();
-                            }
-                        } else if (readBookControl.getCanClickTurn() && event.getX() >= getWidth() / 3 * 2) {
-                            //点击向后翻页
-                            if (state == PREANDNEXT || state == ONLYNEXT) {
-                                int tempIndex = (state == PREANDNEXT ? 1 : 0);
-                                initMoveSuccessAnim(viewContents.get(tempIndex), -getWidth());
-                            } else {
-                                noNext();
-                            }
-                        } else {
-                            //点击中间部位
-                            if (loadDataListener != null)
-                                loadDataListener.showMenu();
-                        }
+                        Log.d("JJ/ContetnSwitchView","Click event! getWidth()="+getWidth());
+                        handleTouchEvent(event);
+
                     }
+                    Log.d("JJ/ContentSwitchView","event done");
                     startX = -1;
                     break;
                 default:

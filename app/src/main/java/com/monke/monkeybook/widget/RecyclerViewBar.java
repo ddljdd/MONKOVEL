@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,9 +84,11 @@ public class RecyclerViewBar extends LinearLayout {
                 int action = event.getAction();
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
+                        Log.i("JJ/RecyclerViewBar","MoveEvent.Action_Down");
                         finalY = event.getY();
                         return true;
                     case MotionEvent.ACTION_MOVE:
+                        Log.i("JJ/RecyclerViewBar","MoveEvent.Action_MOVE");
                         if (finalY >= 0) {
                             float tempY = event.getY();
                             float durY = tempY - finalY;
@@ -97,6 +100,7 @@ public class RecyclerViewBar extends LinearLayout {
                         }
                         return true;
                     case MotionEvent.ACTION_UP:
+                        Log.i("JJ/RecyclerViewBar","MoveEvent.Action_UP");
                         if (finalY >= 0) {
                             finalY = -10000;
                             timeCountDown.cancel();
